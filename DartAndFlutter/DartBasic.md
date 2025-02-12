@@ -41,12 +41,13 @@ while (year < 2016) {
 - Read more about [loops](https://dart.dev/language/loops), including `break` and `continue` 
 - Read more about [Branches](https://dart.dev/language/branches), including `switch` and `case`
 
-### Exceptions
+### Handling errors
+#### Exceptions
 We can throw, catch  or handle exceptions (exceptions are errors indicating that something unexpected happened).  
 If the exception isn't caugth, the [isolate](https://dart.dev/language/concurrency#isolates) that raised the exception
 is suspended, and typically the isolate and it program are terminated.
 Dart provides Exception and Error types, as well as numerous predefined subtypes. You can, of course, define your own exceptions (**_by extend from Exception(), remember throw() error_**). However, Dart programs can throw any non-null object—not just Exception and Error objects—as an exception.
-### Throw
+#### Throw
 ```
 throw FormatException('Expected at least 1 section');
 throw 'Out of llamas!';
@@ -56,7 +57,7 @@ or `throw` exceptions in sorthand statements (=>)
 void distanceTo(Point other) => throw UnimplementedError();
 ```
 
-### Try & Catch
+#### Try & Catch
 `Catching` an exception gives a chance to handle it and stops the exception from propagating (break app ....)  
 To handle more than one type of exception, can specify multiple `catch` clauses. Can use either `on` or `catch` or both.
 Use `on` when need to specify the exception type. Use `catch` when exception handler needs the exception object.
