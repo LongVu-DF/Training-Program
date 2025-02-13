@@ -198,5 +198,169 @@ void main() {
 ```
 Here, `Printer` acts as an `interface`, and both `LaserPrinter` and `InkjetPrinter` implement the `printDocument()` method. This ensures that both printer types can be used interchangeably under the `Printer` interface while providing different implementations for the same method.
 
-### 3. Polymorphism (Đa Hình)
+## 3. Polymorphism (Đa Hình)
 Polymorphism refers to the ability of different classes to respond to the same method call in their own way. In Dart, this is achieved through method overriding and interface implementation, where a subclass can provide its specific implementation for a method defined in the supperclass.
+
+
+## 4. Inheritance (Kế Thừa)
+`Inheritance` in Dart allows one class (called the `subclass` or child class) to `inherit` the properties and method of another class (called `supperclass` or parent class). This provides a way to create a hierarchy of classes, where the child class extends the functionality of the parent class without rewriting code.
+
+Key concepts of inheritance in Dart:
+1. `Superclass`: The class that is being inherited from.
+2. `Subclass`: The class that inherits from `Superclass`.
+3. `Method Overriding`: Allows a `subclass` to provide a specific impkementation of a method that is already defined in the `superclass`.
+
+### # Basic Inheritance
+In Dart, `inheritance` is implemented using the `extends` keyword. When a class `extends` another class, it inherits all non-private members (properties and methods) of the `superclass`.
+```
+class Animal {
+  void eat() {
+    print("Animal is eating");
+  }
+}
+
+class Dog extends Animal {
+  void bark() {
+    print("Dog is barking");
+  }
+}
+
+void main() {
+  var dog = Dog();
+  dog.eat();  // Inherited from Animal
+  dog.bark(); // Defined in Dog
+}
+```
+
+### # Method Overriding
+In Dart, a subclass can overide a method of the superclass. This is useful when the subclass needs to provide a specific implementation of a method that is already defined in the superclass.
+```
+class Animal {
+  void sound() {
+    print("Animal makes a sound");
+  }
+}
+
+class Cat extends Animal {
+  @override
+  void sound() {
+    print("Cat meows");
+  }
+}
+
+void main() {
+  var cat = Cat();
+  cat.sound(); // Output: Cat meows
+}
+```
+### # `super` Keyword
+The `super` keyword in Dart is used to refer to the `superclass` and its members. It allows the child class to call the parent class's `contructor`, `methods`, or `properties`.
+```
+class Vehicle {
+  String driver = "long";
+  void start() {
+    print("Vehicle started");
+  }
+}
+
+class Car extends Vehicle {
+  // String driver = "Vu"
+  @override
+  void start() {
+    super.start();  // Calls the start method of Vehicle
+    print("Car started");
+    print("Driver Name: ${super.driver}");
+    // Use super to get superclass's properties if subclass have same name properties
+  }
+}
+
+void main() {
+  var car = Car();
+  car.start();  
+  // Output:
+  // Vehicle started
+  // Car started
+  // Driver Name: long
+}
+```
+
+Use getter and super to get superclass's `properties` 
+### # Contructors and Inheritance
+When a subclass is instantiated, the constructor of the superclass is automatically called before the constructor of the subclass. Can explicitly call a superclass constructor using `super()` in the subclass's constructor.
+```
+class Person {
+  String name;
+  Person(this.name){
+    print("Superclass)
+  };
+
+  void introduce() {
+    print("Hi, my name is $name");
+  }
+}
+
+class Employee extends Person {
+  String company;
+
+  Employee(String name, this.company) : super(name){
+    print("Subclass")
+  };  // Calls the Person constructor
+
+  @override
+  void introduce() {
+    super.introduce();  // Calls the Person's introduce method
+    print("I work at $company");
+  }
+}
+
+void main() {
+  var emp = Employee("John", "Google");
+  emp.introduce();
+  // Output:
+  // Superclass
+  // Subclass
+  // Hi, my name is John
+  // I work at Google
+}
+```
+If superclass's `constructor` have default value (in example dont have default value), `super(name)` is not required.
+### # Inheritance and Private Variables
+In Dart, `private` variables in a class are not inherited by `subclass`. This ensures encapsulation of private data. Subclasses cannot directly access private members of their parent classes (if subclass and superclass in same files, can use superclass's getter and setter to access to private member. Getter and Setter will not working if subclass and superclass stay in 2 different files).
+```
+class Parent {
+  String _secret = "This is private";
+
+  void showSecret() {
+    print(_secret);
+  }
+}
+
+class Child extends Parent {
+  void display() {
+    // print(_secret);  // Error: '_secret' is private and cannot be accessed
+    print("Trying to access private data");
+  }
+}
+
+void main() {
+  var child = Child();
+  child.display(); // Output: Trying to access private data
+}
+```
+### # Multiple Inheritance in Dart
+Dart dose not support multiple inheritance, meaning a class cannot inherit from more than one class. However, Dart support a feature called Mixins, which allows you to reuse code from multiple sources.
+ ```
+ mixin CanFly {
+  void fly() {
+    print("Flying...");
+  }
+}
+
+class Bird with CanFly {}
+
+void main() {
+  var bird = Bird();
+  bird.fly();  // Output: Flying...
+}
+```
+Use `on` instead of `with` if want to use `super` inside `subclass`

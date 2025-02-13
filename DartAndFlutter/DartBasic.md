@@ -218,4 +218,95 @@ Iterable<int> naturalsDownFrom(int n) sync* {
 }
 ```
 
-## 4. Classes
+## 4. Classes (blueprint) & Object (instance of class)
+### Object
+Object is an instance of a class.
+Object can contain properties and methods.
+Everything in Dart is an Object.
+
+
+### Class variables and methods
+Use the `static` keyword to implement class-wide variables and methods.
+#### Static variabes
+Static variables (class variables) are useful for class-wide state and constants:
+```
+class Counter {
+  static int count = 0; // this static variable belong to class, not each object
+
+  Counter() {
+    count++; // increse each time create new object(instance)
+  }
+}
+
+void main() {
+  print(Counter.count); // ✅ Output: 0
+
+  var a = Counter(); 
+  print(Counter.count); // ✅ Output: 1
+
+  var b = Counter();
+  print(Counter.count); // ✅ Output: 2
+
+  var c = Counter();
+  print(Counter.count); // ✅ Output: 3
+}
+```
+- `static` variables aren't initialized until they're used.
+- `static` variables belong to `class` not `object`
+
+#### Static methods
+`Static` methods (class methods) don't operate on an instance (object), and thus don't have access to `this`. They do, however, have access to static variables. As the following example shows, you invoke static methods directly on a class.
+```
+class MathUtils {
+  static double square(double num) {
+    return num * num;
+  }
+}
+
+void main() {
+  print(MathUtils.square(4)); // ✅ Output: 16.0
+}
+---------------------------------------------------------
+class Test {
+  int x = 10;
+
+  static void show() {
+    print(this.x); // ❌ Error: Static method can't use `this`
+  }
+}
+```
+## Enums
+Dart also allows enum declara tions to declare classes with fields, methods, and const constructors which are limited to a fixed number of known constant instances.
+To declare ab enhanced enum, follow a syntax similar to normal `classes`, but with a few extra requirements:
+- Instance variables must be `final`, including those added by `mixins`.
+- All generative constructors must be constant.
+- Factory constructors can only return one of the fixed, known enum instances.
+- No other class can be extended as `Enum` is automatically extended.
+- There cannot be overrides for `index`, `hashCode`, the equality operator `==`.
+- A member named `values` cannot be declared in an enum, as it would conflict with the automatically generated static `values` getter.
+- All instances of the enum must be declared in the beginning of the declaration, and there must be at least one instance declared.
+Instance methods in an enhanced enum can use `this` to reference the current enum value.
+```
+enum Vehicle implements Comparable<Vehicle> {
+  car(tires: 4, passengers: 5, carbonPerKilometer: 400),
+  bus(tires: 6, passengers: 50, carbonPerKilometer: 800),
+  bicycle(tires: 2, passengers: 1, carbonPerKilometer: 0);
+
+  const Vehicle({
+    required this.tires,
+    required this.passengers,
+    required this.carbonPerKilometer,
+  });
+
+  final int tires;
+  final int passengers;
+  final int carbonPerKilometer;
+
+  int get carbonFootprint => (carbonPerKilometer / passengers).round();
+
+  bool get isTwoWheeled => this == Vehicle.bicycle;
+
+  @override
+  int compareTo(Vehicle other) => carbonFootprint - other.carbonFootprint;
+}
+```
