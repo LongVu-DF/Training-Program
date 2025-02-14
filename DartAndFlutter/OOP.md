@@ -201,14 +201,13 @@ Here, `Printer` acts as an `interface`, and both `LaserPrinter` and `InkjetPrint
 ## 3. Polymorphism (Đa Hình)
 Polymorphism refers to the ability of different classes to respond to the same method call in their own way. In Dart, this is achieved through method overriding and interface implementation, where a subclass can provide its specific implementation for a method defined in the supperclass.
 
-
 ## 4. Inheritance (Kế Thừa)
 `Inheritance` in Dart allows one class (called the `subclass` or child class) to `inherit` the properties and method of another class (called `supperclass` or parent class). This provides a way to create a hierarchy of classes, where the child class extends the functionality of the parent class without rewriting code.
 
 Key concepts of inheritance in Dart:
 1. `Superclass`: The class that is being inherited from.
 2. `Subclass`: The class that inherits from `Superclass`.
-3. `Method Overriding`: Allows a `subclass` to provide a specific impkementation of a method that is already defined in the `superclass`.
+3. `Method Overriding`: Allows a `subclass` to provide a specific implementation of a method that is already defined in the `superclass`.
 
 ### # Basic Inheritance
 In Dart, `inheritance` is implemented using the `extends` keyword. When a class `extends` another class, it inherits all non-private members (properties and methods) of the `superclass`.
