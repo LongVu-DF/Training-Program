@@ -1,5 +1,5 @@
-import 'package:basic_layout/custom_theme.dart';
-import 'package:basic_layout/my_home_page.dart';
+import 'package:basic_layout/core/ui/theme/color_theme.dart';
+import 'package:basic_layout/core/widgets/my_home_page.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatefulWidget {
@@ -10,7 +10,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // ignore: prefer_final_fields
   ThemeMode _themeMode = ThemeMode.system;
 
   _changeTheme(bool text) {
@@ -27,7 +26,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: darkTheme,
       theme: lightTheme,
       themeMode: _themeMode,
-      home: MyHomePage(title: 'Flutter Demo Home Page', onCall: _changeTheme),
+      home: MyHomePage(title: 'To-Do List', onCall: _changeTheme),
     );
   }
 }
