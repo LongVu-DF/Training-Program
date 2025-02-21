@@ -1,4 +1,5 @@
-import 'package:basic_layout/core/ui/utils/buildcontext_extension.dart';
+import 'package:basic_layout/core/ui/add_todo_item_view.dart';
+import 'package:basic_layout/core/utils/buildcontext_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../ui/todo_item_view.dart';
@@ -73,7 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                AddTodoItemView.show(context);
+              },
               child: Icon(Icons.add),
             ),
           ),

@@ -1,19 +1,20 @@
 import 'package:basic_layout/data/models/todo_model.dart';
 import 'package:basic_layout/data/repository/todo_repository.dart';
+import 'package:flutter/widgets.dart';
 
-class ToDoViewModel {
+class ToDoViewModel with ChangeNotifier {
   final TodoRepository _todoRepository = TodoRepository();
-  // final List<ToDo> _todo;
 
   List<ToDo> get todo => _todoRepository.fetchToDo();
-  void addToDo({
-    String title = '',
-    String description = '',
-    String time = '',
-    bool done = false,
-  }) {
-    _todoRepository.addTodo(ToDo(title, description, time, done));
+
+  void deleteTodo(int id) {
+    _todoRepository.deleteTodo(id);
+    notifyListeners();
   }
 
-  // void deleteToDo()
+  ToDoViewModel() {
+    _todoRepository.addListener(() {
+      notifyListeners();
+    });
+  }
 }

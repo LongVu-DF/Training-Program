@@ -1,14 +1,10 @@
+import 'package:basic_layout/data/datasources/todo_data_source.dart';
 import 'package:basic_layout/data/models/todo_model.dart';
+import 'package:flutter/widgets.dart';
 
-class TodoRepository {
-  final List<ToDo> _todo = [
-    ToDo('item 1', 'description 1', 'time 1', false),
-    ToDo('item 2', 'description 2', 'time 2', false),
-    ToDo('item 3', 'description 3', 'time 3', false),
-    ToDo('item 4', 'description 4', 'time 4', false),
-    ToDo('item 5', 'description 5', 'time 5', false),
-  ];
-
+class TodoRepository with ChangeNotifier {
+  final TodoDataSource todoDataSource = TodoDataSource();
+  late final List<ToDo> _todo = todoDataSource.getTodoDataSource();
   List<ToDo> get todo => _todo.where((todo) => todo.done == false).toList();
   List<ToDo> get done => _todo.where((todo) => todo.done == true).toList();
 
@@ -20,7 +16,17 @@ class TodoRepository {
     return done;
   }
 
-  void addTodo(ToDo todo) {
-    _todo.add(todo);
+  void addTodo({
+    String title = '',
+    String description = '',
+    String time = '',
+    bool done = false,
+  }) {
+    _todo.add(ToDo(title, description, time, done, _todo.last.id + 1));
+    notifyListeners();
+  }
+
+  void deleteTodo(int id) {
+    _todo.removeWhere((item) => item.id == id);
   }
 }

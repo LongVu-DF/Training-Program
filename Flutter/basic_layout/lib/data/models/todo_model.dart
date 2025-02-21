@@ -3,5 +3,6 @@ class ToDo {
   String description;
   String time;
   bool done;
-  ToDo(this.title, this.description, this.time, this.done);
+  int id;
+  ToDo(this.title, this.description, this.time, this.done, this.id);
 }
