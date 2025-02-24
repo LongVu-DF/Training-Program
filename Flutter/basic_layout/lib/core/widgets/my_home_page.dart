@@ -1,5 +1,6 @@
 import 'package:basic_layout/core/ui/add_todo_item_view.dart';
 import 'package:basic_layout/core/utils/buildcontext_extension.dart';
+import 'package:basic_layout/core/view_model/todo_view_model.dart';
 import 'package:flutter/material.dart';
 
 import '../ui/todo_item_view.dart';
@@ -13,6 +14,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  ToDoViewModel toDoViewModel = ToDoViewModel();
   bool status = false;
 
   @override
@@ -60,14 +62,80 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   PreferredSize(
                     preferredSize: Size.fromHeight(24),
-                    child: TabBar(tabs: <Widget>[Text('Todo'), Text('Done')]),
+                    child: TabBar(
+                      tabs: <Widget>[
+                        DragTarget<int>(
+                          onAcceptWithDetails: (data) {
+                            if (toDoViewModel.todo[data.data].done) {
+                              int id = toDoViewModel.todo[data.data].id;
+                              String title =
+                                  toDoViewModel.todo[data.data].title;
+                              toDoViewModel.updateTodo(id);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Move to Todo'),
+                                    content: Text(
+                                      'You need to complete ${title}',
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+
+                            // print(data.data);
+                          },
+                          builder: (context, candidateData, rejectedData) {
+                            return Text("Todo");
+                          },
+                        ),
+                        DragTarget<int>(
+                          onAcceptWithDetails: (data) {
+                            if (!toDoViewModel.todo[data.data].done) {
+                              int id = toDoViewModel.todo[data.data].id;
+                              String title =
+                                  toDoViewModel.todo[data.data].title;
+                              toDoViewModel.updateTodo(id);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Move to Done'),
+                                    content: Text('You have completed $title'),
+                                  );
+                                },
+                              );
+                            }
+
+                            // print(data.data);
+                          },
+                          builder: (context, candidateData, rejectedData) {
+                            return Text("Done");
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   Expanded(
-                    child: TabBarView(
-                      children: [
-                        TodoItemView(),
-                        Center(child: Text('View Done')),
-                      ],
+                    child: ListenableBuilder(
+                      listenable: toDoViewModel,
+                      builder: (BuildContext context, Widget? child) {
+                        return TabBarView(
+                          children: [
+                            TodoItemView(
+                              todo: toDoViewModel.todo,
+                              deleteTodo: toDoViewModel.deleteTodo,
+                              updateTodo: toDoViewModel.updateTodo,
+                            ),
+                            TodoItemView(
+                              todo: toDoViewModel.done,
+                              deleteTodo: toDoViewModel.deleteTodo,
+                              updateTodo: toDoViewModel.updateTodo,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -75,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                AddTodoItemView.show(context);
+                AddTodoItemView.show(context, toDoViewModel);
               },
               child: Icon(Icons.add),
             ),
