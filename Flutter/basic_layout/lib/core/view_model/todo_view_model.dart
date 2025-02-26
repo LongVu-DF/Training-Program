@@ -1,20 +1,31 @@
+import 'package:basic_layout/core/blocs/todo_bloc.dart';
 import 'package:basic_layout/data/models/todo_model.dart';
-import 'package:basic_layout/data/repository/todo_repository.dart';
 import 'package:flutter/widgets.dart';
 
 class ToDoViewModel with ChangeNotifier {
-  final TodoRepository _todoRepository = TodoRepository();
-
-  List<ToDo> get todo => _todoRepository.fetchToDo();
+  final TodoBloc todoBloc;
+  ToDoViewModel(this.todoBloc);
+  List<ToDo> get todo => todoBloc.state.todo;
 
   void deleteTodo(int id) {
-    _todoRepository.deleteTodo(id);
-    notifyListeners();
+    todoBloc.deleteTodo(id);
   }
 
-  ToDoViewModel() {
-    _todoRepository.addListener(() {
-      notifyListeners();
-    });
+  void addTodo({
+    String title = '',
+    String description = '',
+    String time = '',
+    bool done = false,
+  }) {
+    todoBloc.addTodo(
+      title: title,
+      time: time,
+      description: description,
+      done: done,
+    );
+  }
+
+  void updateTodo(int id) {
+    todoBloc.updateTodo(id);
   }
 }
