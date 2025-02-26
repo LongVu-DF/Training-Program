@@ -1,35 +1,14 @@
 import 'package:basic_layout/core/utils/buildcontext_extension.dart';
-import 'package:basic_layout/core/view_model/add_todo_view_model.dart';
+import 'package:basic_layout/core/view_model/todo_view_model.dart';
 import 'package:flutter/material.dart';
 
-// class AddTodoItemView extends StatelessWidget {
-//   const AddTodoItemView({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return showDialog<void>(context: context, builder: (BuildContext context){
-//       return Column();
-//     });
-//   }
-// }
-class AddTodoItemView extends StatefulWidget {
-  const AddTodoItemView({super.key});
-
-  @override
-  State<AddTodoItemView> createState() => _AddTodoItemViewState();
-  static Future<void> show(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AddTodoItemView();
-      },
-    );
-  }
-}
-
-class _AddTodoItemViewState extends State<AddTodoItemView> {
+class AddTodoItemView extends StatelessWidget {
+  AddTodoItemView({super.key, required this.viewModel});
+  final ToDoViewModel viewModel;
   final TextEditingController title = TextEditingController();
+
   final TextEditingController description = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -77,7 +56,7 @@ class _AddTodoItemViewState extends State<AddTodoItemView> {
                 ),
                 TextButton(
                   onPressed: () {
-                    AddTodoViewModel().addTodo(
+                    viewModel.addTodo(
                       title: title.text,
                       time: '',
                       description: description.text,
@@ -94,14 +73,13 @@ class _AddTodoItemViewState extends State<AddTodoItemView> {
       ),
     );
   }
-}
 
-// Future<void> addTodoItemView(BuildContext context) {
-//   TextEditingController title = TextEditingController();
-//   TextEditingController description = TextEditingController();
-//   return showDialog<void>(
-//     context: context,
-//     builder: (BuildContext context) {
-//           },
-//   );
-// }
+  static Future<void> show(BuildContext context, ToDoViewModel viewModel) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AddTodoItemView(viewModel: viewModel);
+      },
+    );
+  }
+}

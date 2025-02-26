@@ -6,15 +6,33 @@ class ToDoViewModel with ChangeNotifier {
   final TodoRepository _todoRepository = TodoRepository();
 
   List<ToDo> get todo => _todoRepository.fetchToDo();
-
-  void deleteTodo(int id) {
-    _todoRepository.deleteTodo(id);
-    notifyListeners();
-  }
+  List<ToDo> get done => _todoRepository.fetchDone();
 
   ToDoViewModel() {
     _todoRepository.addListener(() {
       notifyListeners();
     });
+  }
+
+  void deleteTodo(int id) {
+    _todoRepository.deleteTodo(id);
+  }
+
+  void addTodo({
+    String title = '',
+    String description = '',
+    String time = '',
+    bool done = false,
+  }) {
+    _todoRepository.addTodo(
+      title: title,
+      time: time,
+      description: description,
+      done: done,
+    );
+  }
+
+  void updateTodo(int id) {
+    _todoRepository.updateTodo(id);
   }
 }
