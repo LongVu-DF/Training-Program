@@ -6,4 +6,5 @@ extension BuildContextX on BuildContext {
   double get appBarHeight => MediaQuery.of(this).padding.top + kToolbarHeight;
   double get deviceHeight => MediaQuery.of(this).size.height;
   double get deviceWidth => MediaQuery.of(this).size.width;
+  int get currentTabbar => DefaultTabController.of(this).index;
 }
