@@ -23,16 +23,19 @@ class TodoRepositoryImpl implements TodoRepositoryInterface {
     bool done = false,
   }) {
     _todo.add(ToDo(title, description, time, done, _todo.last.id + 1));
+    // print(_todo.toString());
   }
 
   @override
   void deleteTodo(int id) {
     _todo.removeWhere((item) => item.id == id);
+    // print(_todo.toString());
   }
 
   @override
   void updateTodo(int id) {
     int index = _todo.indexWhere((todo) => todo.id == id);
     _todo[index].done = !_todo[index].done;
+    // print(_todo.toString());
   }
 }
