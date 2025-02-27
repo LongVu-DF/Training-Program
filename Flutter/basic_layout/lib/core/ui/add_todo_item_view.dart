@@ -1,10 +1,11 @@
+import 'package:basic_layout/core/blocs/todo_bloc.dart';
 import 'package:basic_layout/core/utils/buildcontext_extension.dart';
-import 'package:basic_layout/core/view_model/todo_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddTodoItemView extends StatelessWidget {
-  AddTodoItemView({super.key, required this.viewModel});
-  final ToDoViewModel viewModel;
+  AddTodoItemView(this.mainContext, {super.key});
+  final BuildContext mainContext;
   final TextEditingController title = TextEditingController();
 
   final TextEditingController description = TextEditingController();
@@ -16,19 +17,19 @@ class AddTodoItemView extends StatelessWidget {
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: context.colorScheme.tertiaryContainer,
+          color: mainContext.colorScheme.tertiaryContainer,
         ),
-        height: context.deviceHeight / 3,
-        width: context.deviceWidth,
+        height: mainContext.deviceHeight / 3,
+        width: mainContext.deviceWidth,
         child: Column(
-          spacing: context.deviceHeight / 35,
+          spacing: mainContext.deviceHeight / 35,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               'Adding new to-do',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: context.colorScheme.onTertiaryContainer,
+                color: mainContext.colorScheme.onTertiaryContainer,
               ),
             ),
             TextField(
@@ -56,7 +57,7 @@ class AddTodoItemView extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    viewModel.addTodo(
+                    mainContext.read<TodoBloc>().addTodo(
                       title: title.text,
                       time: '',
                       description: description.text,
@@ -74,11 +75,11 @@ class AddTodoItemView extends StatelessWidget {
     );
   }
 
-  static Future<void> show(BuildContext context, ToDoViewModel viewModel) {
+  static Future<void> show(BuildContext mainContext) {
     return showDialog(
-      context: context,
+      context: mainContext,
       builder: (BuildContext context) {
-        return AddTodoItemView(viewModel: viewModel);
+        return AddTodoItemView(mainContext);
       },
     );
   }
