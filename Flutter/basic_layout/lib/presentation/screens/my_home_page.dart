@@ -1,10 +1,10 @@
-import 'package:basic_layout/core/blocs/todo_bloc.dart';
-import 'package:basic_layout/core/ui/add_todo_item_view.dart';
+import 'package:basic_layout/presentation/blocs/todo_bloc.dart';
+import 'package:basic_layout/presentation/widgets/add_todo_item_view.dart';
 import 'package:basic_layout/core/utils/buildcontext_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../ui/todo_item_view.dart';
+import '../widgets/todo_item_view.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title, required this.onCall});
@@ -64,15 +64,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   tabs: <Widget>[
                     DragTarget<int>(
                       onAcceptWithDetails: (data) {
-                        int index = context
-                            .read<TodoBloc>()
-                            .state
-                            .todo
-                            .indexWhere((todo) => todo.id == data.data);
-                        if (context.read<TodoBloc>().state.todo[index].done) {
+                        int index = context.read<TodoLoaded>().todos.indexWhere(
+                          (todo) => todo.id == data.data,
+                        );
+                        if (context.read<TodoLoaded>().todos[index].done) {
                           String title =
-                              context.read<TodoBloc>().state.todo[index].title;
-                          context.read<TodoBloc>().updateTodo(data.data);
+                              context.read<TodoLoaded>().todos[index].title;
+                          context.read<TodoBloc>().hasDoneTodo(
+                            data.data,
+                            !context.read<TodoLoaded>().todos[data.data].done,
+                          );
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -84,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           );
                         }
 
-                        // print(context.read<TodoBloc>().state.todo.toString());
+                        // print(context.read<TodoLoaded>().state.todo.toString());
                       },
                       builder: (context, candidateData, rejectedData) {
                         return Text("Todo");
@@ -92,15 +93,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     DragTarget<int>(
                       onAcceptWithDetails: (data) {
-                        int index = context
-                            .read<TodoBloc>()
-                            .state
-                            .todo
-                            .indexWhere((todo) => todo.id == data.data);
-                        if (!context.read<TodoBloc>().state.todo[index].done) {
+                        int index = context.read<TodoLoaded>().todos.indexWhere(
+                          (todo) => todo.id == data.data,
+                        );
+                        if (!context.read<TodoLoaded>().todos[index].done) {
                           String title =
-                              context.read<TodoBloc>().state.todo[index].title;
-                          context.read<TodoBloc>().updateTodo(data.data);
+                              context.read<TodoLoaded>().todos[index].title;
+                          context.read<TodoBloc>().hasDoneTodo(
+                            data.data,
+                            !context.read<TodoLoaded>().todos[data.data].done,
+                          );
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {

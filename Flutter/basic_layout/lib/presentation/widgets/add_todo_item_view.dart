@@ -1,4 +1,5 @@
-import 'package:basic_layout/core/blocs/todo_bloc.dart';
+import 'package:basic_layout/domain/entities/todo.dart';
+import 'package:basic_layout/presentation/blocs/todo_bloc.dart';
 import 'package:basic_layout/core/utils/buildcontext_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,10 +59,18 @@ class AddTodoItemView extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     mainContext.read<TodoBloc>().addTodo(
-                      title: title.text,
-                      time: '',
-                      description: description.text,
-                      done: false,
+                      Todo(
+                        title: title.text,
+                        time: '',
+                        description: description.text,
+                        done: false,
+                        id:
+                            (mainContext.read<TodoBloc>().state as TodoLoaded)
+                                .todos
+                                .last
+                                .id +
+                            1,
+                      ),
                     );
                     Navigator.of(context).pop();
                   },

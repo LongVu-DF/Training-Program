@@ -38,5 +38,6 @@ class ExampleByDartWay {
   factory ExampleByDartWay() {
     return _instance;
   }
+  // sort hand: factory ExampleByDartWay() => _instance
 }
 ```
