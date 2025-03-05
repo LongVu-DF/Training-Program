@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           String title =
                               context.read<TodoLoaded>().todos[index].title;
                           context.read<TodoBloc>().hasDoneTodo(
-                            data.data,
+                            data.data.toString(),
                             !context.read<TodoLoaded>().todos[data.data].done,
                           );
                           showDialog(
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           String title =
                               context.read<TodoLoaded>().todos[index].title;
                           context.read<TodoBloc>().hasDoneTodo(
-                            data.data,
+                            data.data.toString(),
                             !context.read<TodoLoaded>().todos[data.data].done,
                           );
                           showDialog(

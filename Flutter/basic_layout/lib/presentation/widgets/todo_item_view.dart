@@ -19,7 +19,7 @@ class TodoItemView extends StatelessWidget {
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
               var todo = list[index];
-              return LongPressDraggable<int>(
+              return LongPressDraggable<String>(
                 data: todo.id,
                 feedback: dragItem(context, todo),
                 child: item(context, todo, false),

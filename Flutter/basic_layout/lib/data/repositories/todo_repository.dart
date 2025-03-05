@@ -1,36 +1,36 @@
-import 'package:basic_layout/data/datasources/todo_data_source.dart';
-import 'package:basic_layout/data/models/todo_model.dart';
+import 'package:basic_layout/data/datasources/remote/api_service.dart';
+import 'package:basic_layout/data/models/dao/todo_dao.dart';
+import 'package:basic_layout/data/models/mapper/todo_mapper.dart';
 import 'package:basic_layout/domain/entities/todo.dart';
 import 'package:basic_layout/domain/repositories/todo_repositories.dart';
 
 class TodoRepositoryImpl implements TodoRepository {
-  final TodoDataSource todoDataSource;
-  TodoRepositoryImpl(this.todoDataSource);
+  // final TodoDataSource todoDataSource;
+  final ApiService apiService;
+  final TodoDao todoDao;
+  TodoRepositoryImpl({required this.apiService, required this.todoDao});
 
   @override
-  List<TodoModel> fetchAll() => todoDataSource.getTodoDataSource();
-
-  @override
-  void addTodo(Todo todo) {
-    todoDataSource.addTodo(
-      TodoModel(
-        title: todo.title,
-        description: todo.description,
-        time: todo.time,
-        done: todo.done,
-        id: todo.id,
-      ),
-    );
-    // print(_todo.toString());
+  Future<List<Todo>> fetchAll() async {
+    final todoDTOs = await apiService.getTodo();
+    return todoDTOs.map((dto) => TodoMapper.dtoToEntity(dto)).toList();
   }
 
   @override
-  void deleteTodo(int id) {
-    todoDataSource.deleteTodo(id);
+  Future<void> addTodo(Todo todo) async {
+    final todoDAO = TodoMapper.entityToDAO(todo);
+    await todoDao.insertTodo(todoDAO);
   }
 
   @override
-  void hasDoneTodo(int id, bool done) {
-    todoDataSource.hasDoneTodo(id, done);
+  Future<void> deleteTodo(String id) async {
+    await apiService.deleteTodo(id);
+    await todoDao.deleteTodo(id);
+  }
+
+  @override
+  Future<void> hasDoneTodo(String id, bool done) async {
+    await apiService.hasDoneTodo(id, {"completed": done});
+    await todoDao.updateTodo(id, done);
   }
 }

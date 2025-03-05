@@ -1,9 +1,9 @@
 class Todo {
   final String title;
   final String description;
-  final String time;
+  final int time;
   final bool done;
-  final int id;
+  final String id;
   Todo({
     required this.title,
     required this.description,

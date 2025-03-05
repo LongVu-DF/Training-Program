@@ -1,4 +1,5 @@
-import 'package:basic_layout/data/datasources/todo_data_source.dart';
+import 'package:basic_layout/data/datasources/local/todo_database.dart';
+import 'package:basic_layout/data/datasources/remote/api_service.dart';
 import 'package:basic_layout/data/repositories/todo_repository.dart';
 import 'package:basic_layout/domain/usecase/add_todo_usecase.dart';
 import 'package:basic_layout/domain/usecase/delete_todo_usecase.dart';
@@ -7,11 +8,13 @@ import 'package:basic_layout/domain/usecase/has_done_todo_usecase.dart';
 import 'package:basic_layout/presentation/blocs/todo_bloc.dart';
 import 'package:basic_layout/core/theme/color_theme.dart';
 import 'package:basic_layout/presentation/screens/my_home_page.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final TodoDatabase database;
+  const MyApp(this.database, {super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -19,8 +22,21 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.system;
-  late final todoDataSource = TodoDataSource();
-  late final repository = TodoRepositoryImpl(todoDataSource);
+  // late final todoDataSource = TodoDataSource();
+  late final dio = Dio(
+    BaseOptions(
+      baseUrl: "https://67c819070acf98d07084d306.mockapi.io/todos/Todo",
+      headers: {
+        "Content-Type": "application/json",
+      }, // ✅ Thêm Content-Type mặc định
+    ),
+  );
+  late final apiService = ApiService(dio);
+  late final todoDao = widget.database.todoDao;
+  late final repository = TodoRepositoryImpl(
+    apiService: apiService,
+    todoDao: todoDao,
+  );
   late final getTodoUseCase = GetTodoUseCase(repository);
   late final addTodoUseCase = AddTodoUsecase(repository);
   late final deleteTodoUseCase = DeleteTodoUsecase(repository);

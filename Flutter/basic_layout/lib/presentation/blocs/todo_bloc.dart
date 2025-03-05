@@ -20,9 +20,9 @@ class TodoBloc extends Cubit<TodoState> {
     fetchTodo();
   }
 
-  void fetchTodo() {
+  Future<void> fetchTodo() async {
     emit(TodoLoading());
-    final todos = getTodoUseCase.execute();
+    final todos = await getTodoUseCase.execute();
     emit(TodoLoaded(todos));
   }
 
@@ -31,12 +31,12 @@ class TodoBloc extends Cubit<TodoState> {
     fetchTodo();
   }
 
-  void deleteTodo(int id) {
+  void deleteTodo(String id) {
     deleteTodoUsecase.execute(id);
     fetchTodo();
   }
 
-  void hasDoneTodo(int id, bool done) {
+  void hasDoneTodo(String id, bool done) {
     hasDoneTodoUsecase.execute(id, done);
     fetchTodo();
   }
