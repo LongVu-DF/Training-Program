@@ -1,6 +1,6 @@
-import 'package:basic_layout/core/blocs/todo_bloc.dart';
+import 'package:basic_layout/domain/entities/todo.dart';
+import 'package:basic_layout/presentation/blocs/todo_bloc.dart';
 import 'package:basic_layout/core/utils/buildcontext_extension.dart';
-import 'package:basic_layout/data/models/todo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,27 +10,33 @@ class TodoItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TodoBloc, TodoState>(
       builder: (context, state) {
-        List<ToDo> list =
-            context.currentTabbar == 0
-                ? state.todo.where((todo) => todo.done == false).toList()
-                : state.todo.where((todo) => todo.done == true).toList();
-        return ListView.builder(
-          itemCount: list.length,
-          itemBuilder: (BuildContext context, int index) {
-            var todo = list[index];
-            return LongPressDraggable<int>(
-              data: todo.id,
-              feedback: dragItem(context, todo),
-              child: item(context, todo, false),
-              childWhenDragging: item(context, todo, true),
-            );
-          },
-        );
+        if (state is TodoLoaded) {
+          List<Todo> list =
+              context.currentTabbar == 0
+                  ? state.todos.where((todo) => todo.done == false).toList()
+                  : state.todos.where((todo) => todo.done == true).toList();
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (BuildContext context, int index) {
+              var todo = list[index];
+              return LongPressDraggable<int>(
+                data: todo.id,
+                feedback: dragItem(context, todo),
+                child: item(context, todo, false),
+                childWhenDragging: item(context, todo, true),
+              );
+            },
+          );
+        } else if (state is TodoLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return const Center(child: Text("Không có dữ liệu"));
+        }
       },
     );
   }
 
-  item(BuildContext newContext, ToDo todo, bool drag) {
+  item(BuildContext newContext, Todo todo, bool drag) {
     return BlocProvider.value(
       value: newContext.read<TodoBloc>(),
       child: Container(
@@ -87,7 +93,10 @@ class TodoItemView extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                newContext.read<TodoBloc>().updateTodo(todo.id);
+                                newContext.read<TodoBloc>().hasDoneTodo(
+                                  todo.id,
+                                  !todo.done,
+                                );
                                 Navigator.of(context).pop();
                               },
                               child: Row(
@@ -118,7 +127,7 @@ class TodoItemView extends StatelessWidget {
     );
   }
 
-  dragItem(BuildContext context, ToDo todo) {
+  dragItem(BuildContext context, Todo todo) {
     return BlocProvider.value(
       value: context.read<TodoBloc>(),
       child: Container(

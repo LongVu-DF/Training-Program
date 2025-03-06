@@ -4,14 +4,65 @@ class TodoDataSource {
   static final TodoDataSource _instance = TodoDataSource._internal();
   factory TodoDataSource() => _instance;
   TodoDataSource._internal();
-  final List<ToDo> _todo = [
-    ToDo('item 1', 'description 1', 'time 1', false, 1),
-    ToDo('item 2', 'description 2', 'time 2', false, 2),
-    ToDo('item 3', 'description 3', 'time 3', true, 3),
-    ToDo('item 4', 'description 4', 'time 4', false, 4),
-    ToDo('item 5', 'description 5', 'time 5', false, 5),
+  final List<TodoModel> _todo = [
+    TodoModel(
+      title: 'item 1',
+      description: 'description 1',
+      time: 'time 1',
+      done: false,
+      id: 1,
+    ),
+    TodoModel(
+      title: 'item 2',
+      description: 'description 2',
+      time: 'time 2',
+      done: false,
+      id: 2,
+    ),
+    TodoModel(
+      title: 'item 3',
+      description: 'description 3',
+      time: 'time 3',
+      done: true,
+      id: 3,
+    ),
+    TodoModel(
+      title: 'item 4',
+      description: 'description 4',
+      time: 'time 4',
+      done: false,
+      id: 4,
+    ),
+    TodoModel(
+      title: 'item 5',
+      description: 'description 5',
+      time: 'time 5',
+      done: false,
+      id: 5,
+    ),
   ];
-  List<ToDo> getTodoDataSource() {
+  List<TodoModel> getTodoDataSource() {
     return _todo;
+  }
+
+  void addTodo(TodoModel todo) {
+    _todo.add(todo);
+  }
+
+  void deleteTodo(int id) {
+    _todo.removeWhere((item) => item.id == id);
+  }
+
+  void hasDoneTodo(int id, bool done) {
+    int index = _todo.indexWhere((todo) => todo.id == id);
+    if (index != -1) {
+      _todo[index] = TodoModel(
+        title: _todo[index].title,
+        description: _todo[index].description,
+        time: _todo[index].time,
+        done: done,
+        id: _todo[index].id,
+      );
+    }
   }
 }
