@@ -61,15 +61,19 @@ class AddTodoItemView extends StatelessWidget {
                     mainContext.read<TodoBloc>().addTodo(
                       Todo(
                         title: title.text,
-                        time: '',
+                        time: DateTime.timestamp().second,
                         description: description.text,
                         done: false,
                         id:
-                            (mainContext.read<TodoBloc>().state as TodoLoaded)
-                                .todos
-                                .last
-                                .id +
-                            1,
+                            (int.parse(
+                                      (mainContext.read<TodoBloc>().state
+                                              as TodoLoaded)
+                                          .todos
+                                          .last
+                                          .id,
+                                    ) +
+                                    1)
+                                .toString(),
                       ),
                     );
                     Navigator.of(context).pop();

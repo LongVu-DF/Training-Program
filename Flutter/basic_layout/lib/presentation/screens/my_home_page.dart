@@ -62,56 +62,81 @@ class _MyHomePageState extends State<MyHomePage> {
                 preferredSize: Size.fromHeight(24),
                 child: TabBar(
                   tabs: <Widget>[
-                    DragTarget<int>(
+                    DragTarget<String>(
                       onAcceptWithDetails: (data) {
-                        int index = context.read<TodoLoaded>().todos.indexWhere(
-                          (todo) => todo.id == data.data,
-                        );
-                        if (context.read<TodoLoaded>().todos[index].done) {
-                          String title =
-                              context.read<TodoLoaded>().todos[index].title;
-                          context.read<TodoBloc>().hasDoneTodo(
-                            data.data,
-                            !context.read<TodoLoaded>().todos[data.data].done,
+                        final state = context.read<TodoBloc>().state;
+                        if (state is TodoLoaded) {
+                          final todos = state.todos;
+                          int index = todos.indexWhere(
+                            (todo) => todo.id == data.data,
                           );
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Move to Todo'),
-                                content: Text('You need to complete $title'),
-                              );
-                            },
-                          );
+                          if (index == -1) {
+                            return;
+                          }
+                          bool isDone = todos[index].done;
+                          String title = todos[index].title;
+                          if (isDone) {
+                            context.read<TodoBloc>().hasDoneTodo(
+                              data.data,
+                              false,
+                            );
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Move to Todo'),
+                                  content: Text('Moved "$title" to Todo!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
-
-                        // print(context.read<TodoLoaded>().state.todo.toString());
                       },
                       builder: (context, candidateData, rejectedData) {
                         return Text("Todo");
                       },
                     ),
-                    DragTarget<int>(
+                    DragTarget<String>(
                       onAcceptWithDetails: (data) {
-                        int index = context.read<TodoLoaded>().todos.indexWhere(
-                          (todo) => todo.id == data.data,
-                        );
-                        if (!context.read<TodoLoaded>().todos[index].done) {
-                          String title =
-                              context.read<TodoLoaded>().todos[index].title;
-                          context.read<TodoBloc>().hasDoneTodo(
-                            data.data,
-                            !context.read<TodoLoaded>().todos[data.data].done,
+                        final state = context.read<TodoBloc>().state;
+                        if (state is TodoLoaded) {
+                          final todos = state.todos;
+                          int index = todos.indexWhere(
+                            (todo) => todo.id == data.data,
                           );
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Move to Done'),
-                                content: Text('You have completed $title'),
-                              );
-                            },
-                          );
+                          if (index == -1) {
+                            return;
+                          }
+                          bool isDone = todos[index].done;
+                          String title = todos[index].title;
+
+                          if (!isDone) {
+                            context.read<TodoBloc>().hasDoneTodo(
+                              data.data,
+                              true,
+                            );
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Move to Done'),
+                                  content: Text('You have completed "$title"!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
                       },
                       builder: (context, candidateData, rejectedData) {

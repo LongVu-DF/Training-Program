@@ -1,9 +1,9 @@
 class Todo {
   final String title;
   final String description;
-  final String time;
+  final int time;
   final bool done;
-  final int id;
+  final String id;
   Todo({
     required this.title,
     required this.description,
@@ -11,4 +11,19 @@ class Todo {
     required this.done,
     required this.id,
   });
+  Todo copyWith({
+    String? id,
+    String? title,
+    bool? done,
+    int? time,
+    String? description,
+  }) {
+    return Todo(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      done: done ?? this.done,
+      time: time ?? this.time,
+      description: description ?? this.description,
+    );
+  }
 }

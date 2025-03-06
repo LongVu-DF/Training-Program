@@ -19,7 +19,7 @@ class TodoItemView extends StatelessWidget {
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
               var todo = list[index];
-              return LongPressDraggable<int>(
+              return LongPressDraggable<String>(
                 data: todo.id,
                 feedback: dragItem(context, todo),
                 child: item(context, todo, false),
@@ -83,8 +83,27 @@ class TodoItemView extends StatelessWidget {
                         child: Column(
                           children: [
                             TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 newContext.read<TodoBloc>().deleteTodo(todo.id);
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Move to Done'),
+                                      content: Text(
+                                        'You have deleted "${todo.title}"!',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.pop(context),
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                if (!context.mounted) return;
                                 Navigator.of(context).pop();
                               },
                               child: Row(
@@ -92,11 +111,30 @@ class TodoItemView extends StatelessWidget {
                               ),
                             ),
                             TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 newContext.read<TodoBloc>().hasDoneTodo(
                                   todo.id,
                                   !todo.done,
                                 );
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Move to Done'),
+                                      content: Text(
+                                        'You have moved "${todo.title}" to ${todo.done ? "Todo" : "Done"}!',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.pop(context),
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                if (!context.mounted) return;
                                 Navigator.of(context).pop();
                               },
                               child: Row(
