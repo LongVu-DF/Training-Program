@@ -24,12 +24,12 @@ class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.system;
   // late final todoDataSource = TodoDataSource();
   late final dio = Dio(
-    BaseOptions(
-      baseUrl: "https://67c819070acf98d07084d306.mockapi.io/todos/Todo",
-      headers: {
-        "Content-Type": "application/json",
-      }, // ✅ Thêm Content-Type mặc định
-    ),
+    // BaseOptions(
+    //   baseUrl: "https://67c819070acf98d07084d306.mockapi.io/todos/Todo",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // ),
   );
   late final apiService = ApiService(dio);
   late final todoDao = widget.database.todoDao;

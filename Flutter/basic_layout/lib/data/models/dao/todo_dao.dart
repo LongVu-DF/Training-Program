@@ -2,7 +2,7 @@ import 'package:floor/floor.dart';
 
 @Entity(tableName: 'todos')
 class TodoDAO {
-  @PrimaryKey(autoGenerate: true)
+  @PrimaryKey(autoGenerate: false)
   final String id;
   final String title;
   final bool completed;
@@ -13,8 +13,9 @@ class TodoDAO {
 abstract class TodoDao {
   @Query('SELECT * FROM todos')
   Future<List<TodoDAO>> getAllTodos();
-
-  @insert
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertTodos(List<TodoDAO> todos);
+  @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertTodo(TodoDAO todo);
   @Query('UPDATE todos SET completed = :completed WHERE id = :id')
   Future<void> updateTodo(String id, bool completed);

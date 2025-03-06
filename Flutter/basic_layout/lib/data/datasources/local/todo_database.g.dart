@@ -96,7 +96,7 @@ class _$TodoDatabase extends TodoDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `todos` (`id` TEXT PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `completed` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `todos` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `completed` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -158,7 +158,13 @@ class _$TodoDao extends TodoDao {
   }
 
   @override
+  Future<void> insertTodos(List<TodoDAO> todos) async {
+    await _todoDAOInsertionAdapter.insertList(
+        todos, OnConflictStrategy.replace);
+  }
+
+  @override
   Future<void> insertTodo(TodoDAO todo) async {
-    await _todoDAOInsertionAdapter.insert(todo, OnConflictStrategy.abort);
+    await _todoDAOInsertionAdapter.insert(todo, OnConflictStrategy.replace);
   }
 }

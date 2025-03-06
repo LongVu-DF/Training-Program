@@ -26,18 +26,48 @@ class TodoBloc extends Cubit<TodoState> {
     emit(TodoLoaded(todos));
   }
 
-  void addTodo(Todo todo) {
-    addTodoUsecase.execute(todo);
-    fetchTodo();
+  Future<void> addTodo(Todo todo) async {
+    if (state is TodoLoaded) {
+      final currentState = state as TodoLoaded;
+      final updateTodo = List<Todo>.from(currentState.todos)..add(todo);
+      emit(TodoLoaded(updateTodo));
+    }
+    try {
+      addTodoUsecase.execute(todo);
+    } catch (e) {
+      emit(TodoError(e.toString()));
+    }
   }
 
-  void deleteTodo(String id) {
-    deleteTodoUsecase.execute(id);
-    fetchTodo();
+  Future<void> deleteTodo(String id) async {
+    if (state is TodoLoaded) {
+      final currentState = state as TodoLoaded;
+      final updateTodo =
+          List<Todo>.from(
+            currentState.todos,
+          ).where((todo) => todo.id != id).toList();
+      emit(TodoLoaded(updateTodo));
+    }
+    try {
+      await deleteTodoUsecase.execute(id);
+    } catch (e) {
+      emit(TodoError(e.toString()));
+    }
   }
 
-  void hasDoneTodo(String id, bool done) {
-    hasDoneTodoUsecase.execute(id, done);
-    fetchTodo();
+  Future<void> hasDoneTodo(String id, bool done) async {
+    if (state is TodoLoaded) {
+      final currentState = state as TodoLoaded;
+      final updateTodo =
+          currentState.todos.map((todo) {
+            return todo.id == id ? todo.copyWith(done: done) : todo;
+          }).toList();
+      emit(TodoLoaded(updateTodo));
+    }
+    try {
+      await hasDoneTodoUsecase.execute(id, done);
+    } catch (e) {
+      emit(TodoError(e.toString()));
+    }
   }
 }
